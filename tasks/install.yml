@@ -1,0 +1,91 @@
+---
+- name: Install needed helper package(s)
+  become: true
+  become_method: sudo
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - unzip
+
+- name: Check for previously installed and executable terraform
+  shell: "terraform version | head -n1 | awk '{print $2}' | awk -F'-' '{print $1}' | sed 's/v//'"
+  changed_when: False
+  failed_when: False
+  register: prior_terraform_version
+
+- name: Previous terraform version
+  debug:
+    var: prior_terraform_version.stdout
+
+- name: Convert architecture fact to what terraform url structure expects - amd64
+  set_fact:
+    override_ansible_userspace_architecture: amd64
+  when: ansible_userspace_architecture == "x86_64"
+
+- name: Build base part of terraform filename
+  set_fact:
+    terraform_filename: "terraform_{{ terraform_version }}_{{ ansible_system|lower }}_{{ override_ansible_userspace_architecture|default('ansible_userspace_architecture') }}.zip"
+
+- name: Get terraform sha256sums
+  get_url:
+    url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_SHA256SUMS"
+    dest: "/tmp/terraform_{{ terraform_version }}_SHA256SUMS"
+  when: prior_terraform_version.stdout != terraform_version
+
+- name: Get terraform sha256sum signatures
+  get_url:
+    url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_SHA256SUMS.sig"
+    dest: "/tmp/terraform_{{ terraform_version }}_SHA256SUMS.sig"
+  when: prior_terraform_version.stdout != terraform_version
+
+- name: Import the Hashicorp Security gpg key
+  become: true
+  become_method: sudo
+  shell: curl https://keybase.io/hashicorp/key.asc | gpg --import
+  args:
+    warn: False
+  changed_when: False
+  when: prior_terraform_version.stdout != terraform_version
+
+- name: Verify the signature file is untampered
+  become: true
+  become_method: sudo
+  command: "gpg --verify /tmp/terraform_{{ terraform_version }}_SHA256SUMS.sig /tmp/terraform_{{ terraform_version }}_SHA256SUMS"
+  register: sha256_check
+  changed_when: False
+  failed_when: '"Good signature from \"HashiCorp Security <security@hashicorp.com>\"" not in sha256_check.stderr'
+  when: prior_terraform_version.stdout != terraform_version
+
+- name: "Gather signature for {{ terraform_filename }}"
+  shell: "grep '{{ terraform_filename }}' /tmp/terraform_{{ terraform_version }}_SHA256SUMS | awk '{print $1}'"
+  changed_when: False
+  register: terraform_signature
+  when: prior_terraform_version.stdout != terraform_version
+
+- name: "Download {{ terraform_filename }}"
+  get_url:
+    url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/{{ terraform_filename }}"
+    dest: "/tmp/{{ terraform_filename }}"
+    checksum: "sha256:{{ terraform_signature.stdout }}"
+    owner: root
+    group: root
+    mode: 0444
+  when: prior_terraform_version.stdout != terraform_version
+
+- name: Install terraform from the zip
+  become: true
+  become_method: sudo
+  unarchive:
+    src: "/tmp/{{ terraform_filename }}"
+    dest: "/bin"
+    copy: no
+    mode: 0775
+    owner: root
+    group: root
+    seuser: system_u
+    serole: object_r
+    setype: bin_t
+    selevel: s0
+  when: prior_terraform_version.stdout != terraform_version
+...

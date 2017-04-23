@@ -1,0 +1,20 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Phil Porada - philporada@gmail.com
+  description: Installs and Hashicorp Terraform
+  company: MI Tall Guy
+
+  min_ansible_version: 2.2
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+  galaxy_tags:
+    - hashicorp
+    - terraform
+    - infrastructure
+    - code
+...
