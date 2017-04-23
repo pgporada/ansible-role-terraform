@@ -1,3 +1,5 @@
+![pgporada.terraform](https://img.shields.io/badge/pgporada.terraform---blue.svg)
+
 # Overview: ansible-role-terraform
 This role will download, verify the download, and install a version of [Hashicorp Terraform](https://terraform.io).
 
