@@ -9,7 +9,7 @@ This role will download, verify the download, and install a version of [Hashicor
 
 Version of Terraform to install
 
-    terraform_version: 0.9.3
+    terraform_version: 0.9.4
 
 - - - -
 
