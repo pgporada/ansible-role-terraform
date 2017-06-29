@@ -1,4 +1,6 @@
-![pgporada.terraform](https://img.shields.io/badge/role-pgporada.terraform-blue.svg)
+![pgporada.terraform](https://img.shields.io/badge/role-pgporada.terraform-yellow.svg)
+[![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](LICENSE)
+[![](https://img.shields.io/badge/Supports%20Terraform%20Version-0.9.9-blue.svg)](https://github.com/hashicorp/terraform/blob/v0.9.9/CHANGELOG.md)
 
 # Overview: ansible-role-terraform
 This role will download, verify the download, and install a version of [Hashicorp Terraform](https://terraform.io).
@@ -9,7 +11,7 @@ This role will download, verify the download, and install a version of [Hashicor
 
 Version of Terraform to install
 
-    terraform_version: 0.9.8
+    terraform_version: 0.9.9
 
 - - - -
 
@@ -20,12 +22,14 @@ Version of Terraform to install
 
 - - - -
 # How to hack away at this role
-Before submitting a PR, please create a test and run it through test-kitchen.
+Before submitting a PR, please create a test and run it through test-kitchen. You will need to have at least Ruby 2.x, probably through rbenv, and Bundler.
 
-You will need to have at least Ruby 2.x, probably through rbenv, and Bundler.
+    # This takes care of twiddling all the bits that need to be updated when bumping the terraform version
+    ./update_automagic.sh x.x.x
 
-    bundle install
+    # This will run your terraform update through the test system
     bundle update
+    bundle install
     bundle exec kitchen create
     bundle exec kitchen converge
     bundle exec kitchen verify
@@ -39,4 +43,4 @@ You will need to have at least Ruby 2.x, probably through rbenv, and Bundler.
 
 # Copyright and Author Info
 
-(C) Phil Porada 2017 - philporada@gmail.com
+(C) [Phil Porada](https://philporada.com) 2017 - philporada@gmail.com
