@@ -1,6 +1,6 @@
 ![pgporada.terraform](https://img.shields.io/badge/role-pgporada.terraform-yellow.svg)
 [![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](LICENSE)
-[![](https://img.shields.io/badge/Supports%20Terraform%20Version-0.9.9-blue.svg)](https://github.com/hashicorp/terraform/blob/v0.9.9/CHANGELOG.md)
+[![](https://img.shields.io/badge/Supports%20Terraform%20Version-0.9.11-blue.svg)](https://github.com/hashicorp/terraform/blob/v0.9.11/CHANGELOG.md)
 
 # Overview: ansible-role-terraform
 This role will download, verify the download, and install a version of [Hashicorp Terraform](https://terraform.io).
@@ -11,7 +11,7 @@ This role will download, verify the download, and install a version of [Hashicor
 
 Version of Terraform to install
 
-    terraform_version: 0.9.9
+    terraform_version: 0.9.11
 
 - - - -
 
