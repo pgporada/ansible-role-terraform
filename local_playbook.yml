@@ -5,7 +5,7 @@
   become_method: sudo
 
   vars:
-    terraform_version: 0.11.0
+    terraform_version: 0.11.1
 
   roles:
     - ../ansible-role-terraform
