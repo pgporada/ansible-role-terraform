@@ -4,6 +4,9 @@
   become: true
   become_method: sudo
 
+  vars:
+    terraform_version: 0.11.11
+
   roles:
     - ../ansible-role-terraform
 ...
