@@ -37,6 +37,7 @@
   get_url:
     url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_SHA256SUMS.sig"
     dest: "/tmp/terraform_{{ terraform_version }}_SHA256SUMS.sig"
+  failed_when: False
   when: prior_terraform_version.stdout != terraform_version
 
 - name: Import the Hashicorp Security gpg key
