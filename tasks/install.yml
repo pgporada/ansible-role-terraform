@@ -55,7 +55,7 @@
   command: "gpg --verify /tmp/terraform_{{ terraform_version }}_SHA256SUMS.sig /tmp/terraform_{{ terraform_version }}_SHA256SUMS"
   register: sha256_check
   changed_when: False
-  failed_when: '"Good signature from \"HashiCorp Security <security@hashicorp.com>\"" not in sha256_check.stderr'
+  failed_when: '"Good signature from \"HashiCorp Security (hashicorp.com/security) <security@hashicorp.com>\"" not in sha256_check.stderr'
   when: prior_terraform_version.stdout != terraform_version
 
 - name: "Gather signature for {{ terraform_filename }}"
